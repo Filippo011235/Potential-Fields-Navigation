@@ -1,0 +1,16 @@
+d_0 
+Odległość maksymalnego oddziaływania przeszkody.
+- Wpływ d_0 zależy silnie od współczynnika przeszkody k_oi. Duża wartość granicy, ale przy małym k, kosztuje więcej operacji 
+obliczeniowych(uwzględnia znacznie więcej punktów), jednak nieznacznie zmienia siły w punktach pod wzgledem liczbowym. 
+    -> Granica d powinna być proporcjonalna do współczynnika k_oi
+- Wartość d_0 może reprezentować rozmiary robota/przeszkód, lub kompensować niedokładność pozycjonowania elementów
+###############
+k_oi
+Współczynnik wpływu przeszkody. Determinuje jak bardzo siła potencjału przeszkody odpycha robota.
+- Proporcjonalny do tego jak bardzo chce się uniknąć przeszkody(np. wpadnięcie w rów jest groźniejsze niż uderzenie w skałę)
+###############
+k_p
+Współczynnik "przyciągania" finalnego punktu.
+- Duża wartość, względem k_oi, powoduje jak najszybsze dotarcie do celu, przy zwiększeniu ryzyka zbliżenia się do przeszkód.
+- Przewaga k_oi nad k_p, może spowodować wolniejszą(dłuższą), ale bezpieczniejszą ścieżkę
+###############

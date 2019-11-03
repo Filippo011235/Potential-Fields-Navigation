@@ -11,16 +11,18 @@ delta = 0.01   # scene(points) resolution
 NoOfObstacles = 4
 
 # ALGORITHMS:
-k_p = 1
+k_p = 0.1    # Coefficient of final point attraction
 # Repulsion force:
-k_0 = 1 
-d_0 = 3            # Border of obstacles' influence 
-F_rep_MaxValue = 10 # prevents F_rep from closing to infinity
+k_o = 0.1  #  Coefficient of obstacles' repulsion
+d_0 = 1        # Border of obstacles' influence 
+# F_rep_MaxValue - Restriction for repulsion force (prevents F_rep from closing to infinity)
+# Makes plot much more readable for users, but might cause robot to start moving to obstacle,
+# if the MaxValue had been breached
+F_rep_MaxValue = 1/2*k_p*10*np.sqrt(2)
+# = 1/2 of max. attraction force;
 
-# Display only forces of... 
+# For tests/visualization, display only forces of... 
 DisplayForce = "N"      # ...attraction: "A"; repulsion: "R"; net force: "N"
-# Leftovers after tests:
-# Max_Attraction = AttractionForce((-x_size,-y_size),(x_size,y_size)) # -> RepulsionForceFromObstacle
 
 def RandomCoordinate():
     """ Return random coordinate for an object (float). """ 
@@ -38,7 +40,7 @@ def RepulsionForceFromObstacle(q,q_oi):
     """Return repulsion force on point q, from obstacle q_oi"""
     d_i = CalculateDistance(q,q_oi) # Distance to the obstacle
     if (d_i < d_0):     # Point within obstacle influence
-        F_oi = k_0 * (1/d_i - 1/d_0) /d_i**2    
+        F_oi = k_o * (1/d_i - 1/d_0) /d_i**2    
         if (F_oi > F_rep_MaxValue):     # F_rep won't exceed set constant
             return F_rep_MaxValue
     else:   # Point without obstacle influence
@@ -55,21 +57,11 @@ def RepulsionForcesInAPoint(q,ObstVector):
 def ForcesInAPoint(WhichForce, q,q_k,ObstVector):
     """Calculate net force on a point q"""
     """WhichForce determines what kind of forces: F_att "A"; F_rep "R", F_net "N"""
-    # return AttractionForce(q,q_k) + RepulsionForcesInAPoint(q, ObstVector)
-    # Display F_att:
-    # return AttractionForce(q,q_k)
-    # Display F_rep:
-    # return RepulsionForcesInAPoint(q, ObstVector)
     return {
         'N': AttractionForce(q,q_k) + RepulsionForcesInAPoint(q, ObstVector),
         'A': AttractionForce(q,q_k),
         'R': RepulsionForcesInAPoint(q, ObstVector)
     }[WhichForce]
-    # def f(x):
-    # return {
-    #     'a': 1,
-    #     'b': 2,
-    # }[x]
 
 #############################
 x_size = 10
@@ -85,12 +77,10 @@ obst_vect = []
 for i in range(0,NoOfObstacles):
     obst_vect.append((RandomCoordinate(), RandomCoordinate()))
 
-
 x = y = np.arange(-10.0, 10.0, delta)
 X, Y = np.meshgrid(x, y)
 # Matrix Z of net force affecting the robot in a given point
 Z = np.zeros(X.shape)
-
 
 for i in range(0, Z.shape[0]):
     for j in range(0, Z.shape[1]):
@@ -114,4 +104,3 @@ plt.colorbar(orientation='vertical')
 
 plt.grid(True)
 plt.show()
-### 
