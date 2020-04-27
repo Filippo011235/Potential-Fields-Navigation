@@ -11,10 +11,10 @@ delta = 0.01   # scene(points) resolution
 NoOfObstacles = 4
 
 # ALGORITHMS:
-k_p = 0.1    # Coefficient of final point attraction
+k_p = 1    # Coefficient of final point attraction
 # Repulsion force:
-k_o = 0.1  #  Coefficient of obstacles' repulsion
-d_0 = 1        # Border of obstacles' influence 
+k_o = 10  #  Coefficient of obstacles' repulsion
+d_0 = 2        # Border of obstacles' influence 
 # F_rep_MaxValue - Restriction for repulsion force (prevents F_rep from closing to infinity)
 # Makes plot much more readable for users, but might cause robot to start moving to obstacle,
 # if the MaxValue had been breached
